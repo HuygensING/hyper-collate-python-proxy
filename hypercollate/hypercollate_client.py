@@ -1,3 +1,5 @@
+# coding: utf-8
+
 """
    Copyright 2018 Huygens ING
 
@@ -13,13 +15,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+
 import sys
 
 from hypercollate.client.hypercollate import HyperCollate
 from hypercollate.collation_proxy import CollationProxy
 
 
-class HyperCollateProxy:
+class HyperCollateClient:
     def __init__(self, server_url):
         self.hypercollate = HyperCollate(server_url)
 
@@ -32,15 +35,15 @@ class HyperCollateProxy:
 
     def list_collations(self):
         try:
-            list = self.hypercollate.collations.get_all_collation_ids()
-            return list
+            id_list = self.hypercollate.collations.get_all_collation_ids()
+            return id_list
         except Exception as errMsg:
             print(errMsg, file=sys.stderr)
             raise errMsg
 
     def about(self):
         try:
-            about = self.hypercollate.about.get()
+            about = self.hypercollate.about.get().json
             return about
         except Exception as errMsg:
             print(errMsg, file=sys.stderr)
