@@ -48,6 +48,13 @@ class CollationsEndpoint(HyperCollateEndpoint):
         add_result = RestRequester(adder).on_status(HTTPStatus.CREATED, util.response_as_is).invoke()
         return add_result
 
+    def delete_collation(self, collation_id):
+        def deleter():
+            return self.hypercollate.delete(util.endpoint_uri(self.endpoint, collation_id))
+
+        result = RestRequester(deleter).on_status(HTTPStatus.NO_CONTENT, util.response_as_is).invoke()
+        return result
+
     def add_witness(self, collation_id, sigil, xml):
         def adder():
             return self.hypercollate.put_data(util.endpoint_uri(self.endpoint, collation_id, 'witnesses', sigil), xml, content_type='text/xml; charset=UTF-8')
@@ -57,7 +64,13 @@ class CollationsEndpoint(HyperCollateEndpoint):
 
     def get_dot(self, collation_id):
         def getter():
-            return self.hypercollate.get(util.endpoint_uri(self.endpoint, collation_id, 'dot'))
+            return self.hypercollate.get(util.endpoint_uri(self.endpoint, collation_id) + '.dot')
+
+        return RestRequester(getter).on_status(HTTPStatus.OK, util.response_as_is).invoke().response.text
+
+    def get_svg(self, collation_id):
+        def getter():
+            return self.hypercollate.get(util.endpoint_uri(self.endpoint, collation_id) + '.svg')
 
         return RestRequester(getter).on_status(HTTPStatus.OK, util.response_as_is).invoke().response.text
 

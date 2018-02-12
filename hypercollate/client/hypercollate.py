@@ -38,13 +38,13 @@ class HyperCollate:
     def get(self, uri):
         url = urljoin(self.server_url, uri)
         r = self.session.get(url=url)
-        r.raise_for_status()
+        self._handle_http_errors(r)
         return r
 
     def put(self, uri, data):
         url = urljoin(self.server_url, uri)
         r = self.session.put(url=url, json=data)
-        r.raise_for_status()
+        self._handle_http_errors(r)
         return r
 
     def put_data(self, uri, data, content_type='text/plain'):
@@ -53,13 +53,13 @@ class HyperCollate:
         self.session.headers['content-type'] = content_type
         r = self.session.put(url=url, data=data)
         self.session.headers['content-type'] = current_content_type
-        r.raise_for_status()
+        self._handle_http_errors(r)
         return r
 
     def post(self, uri, json):
         url = urljoin(self.server_url, uri)
         r = self.session.post(url=url, json=json)
-        r.raise_for_status()
+        self._handle_http_errors(r)
         return r
 
     def post_data(self, uri, data, content_type='text/plain'):
@@ -68,10 +68,18 @@ class HyperCollate:
         self.session.headers['content-type'] = content_type
         r = self.session.post(url=url, data=data)
         self.session.headers['content-type'] = current_content_type
-        r.raise_for_status()
+        self._handle_http_errors(r)
         return r
 
     def delete(self, uri):
         r = self.session.delete(url=urljoin(self.server_url, uri))
-        r.raise_for_status()
+        self._handle_http_errors(r)
         return r
+
+    @staticmethod
+    def _handle_http_errors(r):
+        r.encoding = 'utf-8'
+        if r.status_code == 400:
+            raise Exception('Bad Request: ' + r.content.decode("utf-8"))
+        else:
+            r.raise_for_status()

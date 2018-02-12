@@ -33,6 +33,9 @@ class HyperCollateClient:
         self.hypercollate.collations.add_collation(collation_id)
         return CollationProxy(collation_id, self.hypercollate)
 
+    def delete_collation(self,collation_id):
+        self.hypercollate.collations.delete_collation(collation_id)
+
     def list_collations(self):
         try:
             id_list = self.hypercollate.collations.get_all_collation_ids()
