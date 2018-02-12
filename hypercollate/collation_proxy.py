@@ -15,7 +15,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+from urllib.parse import urljoin
 
+from IPython.core.display import display, HTML
+from IPython.lib.display import IFrame
+
+from hypercollate.client import util
 from hypercollate.client.hypercollate import HyperCollate
 
 
@@ -23,12 +28,14 @@ class CollationProxy:
     def __init__(self, collation_id: str, hypercollate: HyperCollate):
         self.collation_id = collation_id
         self.collations = hypercollate.collations
+        self.base_uri = util.endpoint_uri(hypercollate.server_url[:-1], hypercollate.collations.endpoint, collation_id)
 
     def __str__(self):
         return "CollationProxy::" + self.collation_id
 
     def __dir__(self):
-        return ['get_info', 'add_witness_from_xml_text', 'add_witness_from_xml_file', 'get_dot', 'get_ascii_table']
+        return ['get_info', 'add_witness_from_xml_text', 'add_witness_from_xml_file',
+                'get_dot', 'get_ascii_table', 'show_as_png', 'show_as_svg']
 
     def get_info(self):
         return self.collations.get_info(self.collation_id)
@@ -46,3 +53,13 @@ class CollationProxy:
 
     def get_ascii_table(self):
         return self.collations.get_ascii_table(self.collation_id)
+
+    def show_as_png(self):
+        self.show_img(self.base_uri + '.png')
+
+    def show_as_svg(self):
+        self.show_img(self.base_uri + '.svg')
+
+    def show_img(self, url):
+        display(IFrame(src=url, width=950, height=300))
+        display(HTML('<a href="' + url + '" target="_new" >open in new tab</a>'))

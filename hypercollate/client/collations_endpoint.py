@@ -68,12 +68,6 @@ class CollationsEndpoint(HyperCollateEndpoint):
 
         return RestRequester(getter).on_status(HTTPStatus.OK, util.response_as_is).invoke().response.text
 
-    def get_svg(self, collation_id):
-        def getter():
-            return self.hypercollate.get(util.endpoint_uri(self.endpoint, collation_id) + '.svg')
-
-        return RestRequester(getter).on_status(HTTPStatus.OK, util.response_as_is).invoke().response.text
-
     def get_ascii_table(self, collation_id):
         def getter():
             return self.hypercollate.get(util.endpoint_uri(self.endpoint, collation_id, 'ascii_table'))
