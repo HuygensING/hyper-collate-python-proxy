@@ -66,8 +66,7 @@ class CollationsEndpoint(HyperCollateEndpoint):
     def get_dot(self, collation_id, emphasize_whitespace=False):
         def getter():
             dot_url = util.endpoint_uri(self.endpoint, collation_id) + '.dot'
-            if emphasize_whitespace:
-                dot_url += '?emphasize-whitespace=true'
+            uri =_add_parameters(dot_url, emphasize_whitespace)
             return self.hypercollate.get(dot_url)
 
         return RestRequester(getter).on_status(HTTPStatus.OK, util.response_as_is).invoke().response.text
@@ -75,8 +74,14 @@ class CollationsEndpoint(HyperCollateEndpoint):
     def get_ascii_table(self, collation_id, emphasize_whitespace=False):
         def getter():
             uri = util.endpoint_uri(self.endpoint, collation_id, 'ascii_table')
-            if emphasize_whitespace:
-                uri += '?emphasize-whitespace=true'
+
+            uri = _add_parameters(uri, emphasize_whitespace)
             return self.hypercollate.get(uri)
 
         return RestRequester(getter).on_status(HTTPStatus.OK, util.response_as_is).invoke().response.text
+
+
+def _add_parameters(uri, emphasize_whitespace):
+    if emphasize_whitespace:
+        uri += '?emphasize-whitespace=true'
+    return uri

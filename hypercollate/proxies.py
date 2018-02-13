@@ -51,8 +51,8 @@ class CollationProxy:
     def get_dot(self, emphasize_whitespace=False):
         return self.collations.get_dot(self.collation_id, emphasize_whitespace)
 
-    def get_ascii_table(self):
-        return self.collations.get_ascii_table(self.collation_id)
+    def get_ascii_table(self, emphasize_whitespace=False):
+        return self.collations.get_ascii_table(self.collation_id, emphasize_whitespace)
 
     def get_witness(self, sigil):
         allowed_sigils = self.get_info()['witnesses'].keys()
