@@ -19,7 +19,7 @@
 import sys
 
 from hypercollate.client.hypercollate import HyperCollate
-from hypercollate.collation_proxy import CollationProxy
+from hypercollate.proxies import CollationProxy
 
 
 class HyperCollateClient:
@@ -33,7 +33,7 @@ class HyperCollateClient:
         self.hypercollate.collations.add_collation(collation_id)
         return CollationProxy(collation_id, self.hypercollate)
 
-    def delete_collation(self,collation_id):
+    def delete_collation(self, collation_id):
         self.hypercollate.collations.delete_collation(collation_id)
 
     def list_collations(self):

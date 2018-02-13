@@ -19,9 +19,8 @@
 import glob
 from os.path import dirname, basename, isfile
 
-from hypercollate.collation_proxy import CollationProxy
+from hypercollate.proxies import CollationProxy, WitnessProxy
 from hypercollate.hypercollate_client import HyperCollateClient
 
 modules = glob.glob(dirname(__file__) + "/*.py")
 __all__ = [basename(f)[:-3] for f in modules if isfile(f)]
-
