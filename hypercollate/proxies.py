@@ -28,7 +28,6 @@ class CollationProxy:
         self.collation_id = collation_id
         self.collations = hypercollate.collations
         self.hypercollate = hypercollate
-        self.base_uri = util.endpoint_uri(hypercollate.server_url[:-1], hypercollate.collations.endpoint, collation_id)
 
     def __str__(self):
         return "CollationProxy::" + self.collation_id
@@ -62,10 +61,10 @@ class CollationProxy:
             raise Exception('collation \'' + self.collation_id + '\' has no witness \'' + sigil + '\'')
 
     def show_as_png(self, emphasize_whitespace=False):
-        _show_img(self.base_uri + '.png')
+        _show_img(self.get_info()['^png'], emphasize_whitespace)
 
     def show_as_svg(self, emphasize_whitespace=False):
-        _show_img(self.base_uri + '.svg')
+        _show_img(self.get_info()['^svg'], emphasize_whitespace)
 
 
 class WitnessProxy:
